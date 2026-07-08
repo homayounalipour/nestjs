@@ -1,17 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from '../jwt-auth/jwt-auth.guard';
+import userGuard from '../users/dto/userGuards';
 
 @Controller('products')
 export class ProductsController {
@@ -19,10 +22,12 @@ export class ProductsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createProductDto: CreateProductDto) {
-    // return this.productsService.create(createProductDto);
-    console.log(createProductDto);
-    return { message: 'ok', data: createProductDto };
+  create(
+    @Body() createProductDto: CreateProductDto,
+    @Req() request: Request & { user: userGuard },
+  ) {
+    createProductDto.user = request.user;
+    return this.productsService.create(createProductDto);
   }
 
   @Get()
@@ -31,17 +36,22 @@ export class ProductsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.productsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto,  @Req() request: Request & { user: userGuard },) {
+    return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  remove(
+    @Param('id') id: number,
+    @Req() request: Request & { user: userGuard },
+  ) {
+    return this.productsService.remove(id, request.user);
   }
 }
