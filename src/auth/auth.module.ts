@@ -5,10 +5,13 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Codes } from '../entities/codes.entity';
 
 @Module({
   imports: [
     UsersModule,
+    TypeOrmModule.forFeature([Codes]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'secret',
