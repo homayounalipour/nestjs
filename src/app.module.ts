@@ -9,9 +9,38 @@ import { AuthModule } from './auth/auth.module';
 import Users from './entities/user.entity';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/adapters/ejs.adapter';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+
 
 @Module({
   imports: [
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT
+          ? Number(process.env.EMAIL_SERVER_PORT)
+          : undefined,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+      defaults: {
+        from: 'Welcome to our app <homayounalipour1375@gmail.com>',
+      },
+      template: {
+        dir: path.join(__dirname, 'templates'),
+        adapter: new EjsAdapter(),
+        options: {
+          strict: false,
+        },
+      },
+    }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
