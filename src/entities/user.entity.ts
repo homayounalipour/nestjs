@@ -22,4 +22,7 @@ export default class Users {
 
   @Column({ nullable: true })
   avatar!: string;
+
+  @Column({ type: 'varchar', default: 'user' })
+  role!: 'user' | 'admin';
 }

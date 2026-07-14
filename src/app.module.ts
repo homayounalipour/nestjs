@@ -6,6 +6,7 @@ import { ProductsModule } from './products/products.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 import Users from './entities/user.entity';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
@@ -71,6 +72,7 @@ dotenv.config();
     UsersModule,
     ProductsModule,
     AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

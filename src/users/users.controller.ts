@@ -2,7 +2,6 @@ import { Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/co
 import { UsersService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/helpers/multer.config';
-import { log } from 'console';
 
 @Controller('users')
 export class UsersController {
