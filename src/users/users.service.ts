@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import Users from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +9,7 @@ export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
-  ) {}
+  ) { }
 
   findUserByEmail = async (email: string) => {
     return await this.userRepository.findOne({
@@ -50,4 +50,17 @@ export class UsersService {
       username,
     };
   }
+
+  uploadAvatar = async (file: Express.Multer.File) => {
+    if (!file) {
+      throw new BadRequestException('Avatar file is required');
+    }
+
+    return {
+      filename: file.filename,
+      path: `/uploads/${file.filename}`,
+      mimetype: file.mimetype,
+      size: file.size,
+    };
+  };
 }

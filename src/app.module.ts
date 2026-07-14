@@ -12,12 +12,16 @@ import * as path from 'path';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/adapters/ejs.adapter';
 import * as dotenv from 'dotenv';
+import { ServeStaticModule } from '@nestjs/serve-static';
 dotenv.config();
 
 
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'static'),
+    }),
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_SERVER_HOST,

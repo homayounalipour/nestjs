@@ -1,4 +1,4 @@
 export default class userGuard {
-  id: number;
-  email: string;
+  id!: number;
+  email!: string;
 }
